@@ -16,6 +16,9 @@ const userSchema  = mongoose.Schema({
     password:{
         type: String,
         required: true
+    },
+    refreshToken:{
+        type: String,
     }
 }  ,{timestamps: true}
 )
@@ -25,12 +28,16 @@ userSchema.pre('save', async function (next){
 
     try {
         const salt = await bcrypt.genSalt(10);
-        this.password = bcrypt.hash(this.password, salt);
+        this.password =  bcrypt.hash(this.password, salt);
         next();
     } catch (error) {
         next(error);
     }
 })
+
+userSchema.methods.comparePassword = async function (enteredPassword){
+    return await bcrypt.compare(enteredPassword, this.password);
+}
 
 userSchema.generateAccessToken = function(){
     return jwt.sign(
