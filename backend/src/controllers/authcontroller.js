@@ -116,3 +116,37 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: "Error occurred while logging in user" });
   }
 };
+
+const logout = async (req, res) => {
+  //!algo is to clear the refresh token from the database and clear the cookies from the client side
+
+  //! now problem we have first find the fuser  from db but right now dont have any user property to find the user from db
+
+  //? here comes the concept of middleware for authentication and authorization where we will verify the access token sent by the client in the headers and then we will extract the user information from the token and then we will find the user from the database using that information and then we will clear the refresh token from the database and clear the cookies from the client side
+
+
+  console.log("logout user : ", req.user);
+
+  await User.findByIdandUpdate(
+    req.user._id,
+    { refreshToken: "" },
+    { new: true },
+  );
+
+  options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json({ message: "User logged out successfully" });
+};
+
+export default {
+  registerUser,
+  loginUser,
+  logout,
+};
