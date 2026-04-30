@@ -4,17 +4,16 @@ import connectDB from "./src/config/db";
 import cookieparser from "cookie-parser";
 
 
+dotenv.config({
+  path: "./.env",
+});
+
 import authRoutes from "./src/routes/auth/authRoutes.js";
 
 const app = express();
 
 
 app.use(cookieparser());
-
-
-dotenv.config({
-  path: "./.env",
-});
 
 connectDB();
 
